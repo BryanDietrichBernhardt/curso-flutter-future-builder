@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:products_app/models/product.dart';
+import 'package:products_app/screens/product/product_edit_page.dart';
 
 class ProductDetailPage extends StatefulWidget {
   const ProductDetailPage({super.key, required this.product});
@@ -23,7 +24,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   @override
   initState() {
     _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 600))
+        vsync: this, duration: const Duration(milliseconds: 300))
       ..addListener(() {
         setState(() {});
       });
@@ -69,68 +70,71 @@ class _ProductDetailPageState extends State<ProductDetailPage>
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 8, 8),
-              child: Image.network(
-                widget.product.image,
-                fit: BoxFit.fill,
-                width: double.infinity,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Image.network(
+                  widget.product.image,
+                  fit: BoxFit.fill,
+                  width: double.infinity,
+                ),
               ),
-            ),
-            Row(children: [
-              Flexible(
-                child: Text(widget.product.description),
+              Row(children: [
+                Flexible(
+                  child: Text(widget.product.description),
+                ),
+              ]),
+              Padding(
+                padding: const EdgeInsets.only(top: 8, bottom: 8),
+                child: Row(
+                  children: [
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 5,
+                      children: [
+                        const Icon(Icons.qr_code_sharp),
+                        Text(widget.product.id),
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ]),
-            Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: Row(
+              Row(
                 children: [
-                  Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: 5,
-                    children: [
-                      const Icon(Icons.qr_code_sharp),
-                      Text(widget.product.id),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 5,
+                      children: [
+                        const Icon(Icons.inventory_2_outlined),
+                        Text(widget.product.quantity.toString()),
+                      ],
+                    ),
                   )
                 ],
               ),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: 5,
-                    children: [
-                      const Icon(Icons.inventory_2_outlined),
-                      Text(widget.product.quantity.toString()),
-                    ],
-                  ),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: 5,
-                    children: [
-                      const Icon(Icons.monetization_on_outlined),
-                      Text(
-                          widget.product.price.toString().replaceAll('.', ',')),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ],
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 5,
+                      children: [
+                        const Icon(Icons.monetization_on_outlined),
+                        Text(widget.product.price
+                            .toString()
+                            .replaceAll('.', ',')),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: Column(
@@ -172,7 +176,18 @@ class _ProductDetailPageState extends State<ProductDetailPage>
             ),
             child: FloatingActionButton(
               heroTag: 'edit',
-              onPressed: () {/* Do something */},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ProductEditPage(
+                        product: widget.product,
+                      );
+                    },
+                  ),
+                );
+              },
               child: const Icon(Icons.edit),
             ),
           ),
